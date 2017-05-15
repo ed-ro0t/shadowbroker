@@ -14,7 +14,7 @@ Set up core paths
 """ 
 Make sure our libraries are setup properly 
 """
-#env.setup_lib_paths(os.path.abspath(__file__), EDFLIB_DIR)
+env.setup_lib_paths(os.path.abspath(__file__), EDFLIB_DIR)
 
 """
 Plugin directories
@@ -27,6 +27,7 @@ LP_DIR      = os.path.join(FB_DIR, "listeningposts")
 EDE_DIR     = os.path.join(FB_DIR, "ede-exploits")
 TRIGGER_DIR = os.path.join(FB_DIR, "triggers")
 SPECIAL_DIR = os.path.join(FB_DIR, "specials")
+XTND_DIR    = os.path.join(FB_DIR, "xtnd")
 
 """
 Fuzzbunch directories
@@ -35,12 +36,14 @@ LOG_DIR    = os.path.join(FB_DIR, "logs")
 FB_CONFIG = os.path.join(FB_DIR, "Fuzzbunch.xml")
 
 from fuzzbunch.edfplugin import EDFPlugin
-#from fuzzbunch.edeplugin import EDEPlugin
+from fuzzbunch.edeplugin import EDEPlugin
 from fuzzbunch.fuzzbunch import Fuzzbunch
 from fuzzbunch.pluginfinder import addplugins, PluginfinderError
 from fuzzbunch import exception
 from fuzzbunch.daveplugin import DAVEPlugin
 from fuzzbunch.deployablemanager import DeployableManager
+from fuzzbunch.xtndplugin import XTNDPlugin
+
 
 def do_interactive(fb):
     gvars = globals()
@@ -51,7 +54,7 @@ def do_interactive(fb):
     code.interact(local=gvars, banner="")
 
 def main(fb):
-    #fb.printbanner()
+    fb.printbanner()
     fb.cmdqueue.append("retarget")
     while 1:
         try:
@@ -71,8 +74,9 @@ def load_plugins(fb):
     addplugins(fb, "ImplantConfig", IMPLANT_DIR, EDFPlugin)
     addplugins(fb, "ListeningPost", LP_DIR,      EDFPlugin)
     addplugins(fb, "Special",       SPECIAL_DIR, DAVEPlugin, DeployableManager)
-    #    addplugins(fb, "EDE-Exploit",   EDE_DIR,     EDEPlugin)
-    #    addplugins(fb, "Trigger",       TRIGGER_DIR, EDFPlugin)
+    addplugins(fb, "EDE-Exploit",   EDE_DIR,     EDEPlugin)
+    addplugins(fb, "Trigger",       TRIGGER_DIR, EDFPlugin)
+    addplugins(fb, "Xtnd",          XTND_DIR,   XTNDPlugin)
 
 @exception.exceptionwrapped
 def setup_and_run(config, fbdir, logdir):
